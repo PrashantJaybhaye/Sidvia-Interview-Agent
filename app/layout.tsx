@@ -23,6 +23,7 @@ export default function RootLayout({
         <html lang="en" className="dark">
             <head>
                 <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+                <meta name="google-site-verification" content="I9zK1PvZxT0MdjW2WlwZwfBxy4D20jKz5E2KWbgwf2U" />
             </head>
             <body
                 className={`${monaSans.className} antialiased`}
