@@ -111,10 +111,10 @@ export const interviewer: CreateAssistantDTO = {
     provider: "vapi",
     voiceId: "Neha",
     speed: 0.9,
-    },
+  },
   model: {
     provider: "google",
-    model: "gemini-2.5-pro",
+    model: "gemini-2.5-flash",
     messages: [
       {
         role: "system",
