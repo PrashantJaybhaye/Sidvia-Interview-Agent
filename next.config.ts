@@ -8,10 +8,15 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    domains: [
-      "github.githubassets.com",
-      "lh3.googleusercontent.com"
-
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "github.githubassets.com",
+      },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+      },
     ],
   },
 };
