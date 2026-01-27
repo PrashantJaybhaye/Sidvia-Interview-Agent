@@ -59,6 +59,7 @@ export async function createFeedback(params: CreateFeedbackParams) {
 
     if (!existingFeedback.empty) {
       // Return the existing feedback instead of creating a duplicate
+      console.log(`[createFeedback] Found existing feedback for interview ${interviewId}`);
       const existingDoc = existingFeedback.docs[0];
       return {
         success: true,
@@ -74,6 +75,8 @@ export async function createFeedback(params: CreateFeedbackParams) {
           `- ${sentence.role}: ${sentence.content}\n`
       )
       .join("");
+
+    console.log(`[createFeedback] Generating feedback for interview ${interviewId} with ${transcript.length} messages`);
 
     // 🤖 Generate feedback using Gemini
     const {
@@ -94,13 +97,15 @@ export async function createFeedback(params: CreateFeedbackParams) {
         Please score the candidate from 0 to 100 in the following areas. Do not add categories other than the ones provided:
         - **Communication Skills**: Clarity, articulation, structured responses.
         - **Technical Knowledge**: Understanding of key concepts for the role.
-        - **Problem-Solving**: Ability to analyze problems and propose solutions.
-        - **Cultural & Role Fit**: Alignment with company values and job role.
-        - **Confidence & Clarity**: Confidence in responses, engagement, and clarity.
+        - **Problem Solving**: Ability to analyze problems and propose solutions.
+        - **Cultural Fit**: Alignment with company values and job role.
+        - **Confidence and Clarity**: Confidence in responses, engagement, and clarity.
         `,
       system:
         "You are a professional interviewer named Sidvia AI analyzing a mock interview. Your task is to evaluate the candidate based on structured categories.",
     });
+
+    console.log(`[createFeedback] Generated scores. Total: ${totalScore}. Saving to DB...`);
 
     // 💾 Save new feedback
     const feedback = await db.collection("feedback").add({
@@ -113,6 +118,8 @@ export async function createFeedback(params: CreateFeedbackParams) {
       finalAssessment,
       createdAt: new Date().toISOString(),
     });
+
+    console.log(`[createFeedback] Saved feedback with ID: ${feedback.id}`);
 
     return {
       success: true,
