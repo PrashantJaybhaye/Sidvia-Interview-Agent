@@ -1,7 +1,8 @@
 import Vapi from "@vapi-ai/web";
 
 // Create VAPI instance with enhanced error handling
-export const vapi = new Vapi(process.env.NEXT_PUBLIC_VAPI_WEB_TOKEN!);
+// Avoid instantiation on server-side to prevent "module factory not available" or window undefined errors
+export const vapi = typeof window !== 'undefined' ? new Vapi(process.env.NEXT_PUBLIC_VAPI_WEB_TOKEN!) : (null as any);
 
 // Cache for device enumeration to avoid repeated calls
 let deviceEnumerationCache: MediaDeviceInfo[] | null = null;
@@ -11,15 +12,15 @@ let deviceEnumerationPromise: Promise<MediaDeviceInfo[]> | null = null;
 const originalWarn = console.warn;
 console.warn = (...args: any[]) => {
   const message = args.join(' ');
-  
+
   // Filter out expected VAPI device enumeration warnings
   if (message.includes('enumerateDevices took longer than expected') ||
-      message.includes('Ignoring settings for browser- or platform-unsupported input processor')) {
+    message.includes('Ignoring settings for browser- or platform-unsupported input processor')) {
     // Log as info instead of warning for these expected cases
     console.info('[VAPI Info]', ...args);
     return;
   }
-  
+
   // Pass through all other warnings
   originalWarn.apply(console, args);
 };
@@ -39,17 +40,17 @@ export const getCachedAudioDevices = async (): Promise<MediaDeviceInfo[]> => {
 
   // Start new enumeration
   deviceEnumerationPromise = navigator.mediaDevices.enumerateDevices();
-  
+
   try {
     const devices = await deviceEnumerationPromise;
     deviceEnumerationCache = devices;
-    
+
     // Clear cache after 30 seconds
     setTimeout(() => {
       deviceEnumerationCache = null;
       deviceEnumerationPromise = null;
     }, 30000);
-    
+
     return devices.filter(device => device.kind === 'audioinput');
   } catch (error) {
     deviceEnumerationPromise = null;
@@ -73,7 +74,7 @@ export const enumerateAudioDevicesWithRetry = async (timeoutMs = 5000, maxRetrie
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       const deviceCheckPromise = getCachedAudioDevices();
-      const timeoutPromise = new Promise<never>((_, reject) => 
+      const timeoutPromise = new Promise<never>((_, reject) =>
         setTimeout(() => reject(new Error(`Device enumeration timeout after ${timeoutMs}ms`)), timeoutMs)
       );
 
@@ -81,16 +82,16 @@ export const enumerateAudioDevicesWithRetry = async (timeoutMs = 5000, maxRetrie
       return audioDevices;
     } catch (error) {
       console.warn(`Audio device enumeration attempt ${attempt}/${maxRetries} failed:`, error);
-      
+
       if (attempt === maxRetries) {
         throw error;
       }
-      
+
       // Wait before retrying (exponential backoff)
       await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
     }
   }
-  
+
   return [];
 };
 
@@ -99,20 +100,20 @@ export const preWarmAudioDevices = async (): Promise<void> => {
   try {
     // Pre-enumerate devices to cache them
     await navigator.mediaDevices.enumerateDevices();
-    
+
     // Pre-request microphone permission to avoid delays during VAPI start
-    const stream = await navigator.mediaDevices.getUserMedia({ 
-      audio: { 
+    const stream = await navigator.mediaDevices.getUserMedia({
+      audio: {
         ...audioConstraints,
         // Use minimal constraints for pre-warming
         sampleRate: 16000,
         channelCount: 1
-      } 
+      }
     });
-    
+
     // Immediately stop the stream
     stream.getTracks().forEach(track => track.stop());
-    
+
     console.info('[VAPI] Audio devices pre-warmed successfully');
   } catch (error) {
     console.info('[VAPI] Audio pre-warming failed (this is expected if no microphone is available):', error);

@@ -161,25 +161,19 @@ export default function Agent({ userName, userId, interviewId, type, questions =
     setCallStatus(CallStatus.CONNECTING)
 
     try {
-      if (type === "generate") {
-        await vapi.start(undefined, undefined, undefined, process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!, {
-          variableValues: {
-            username: userName,
-            userid: userId,
-          },
-        })
-      } else {
-        const formattedQuestions = questions.length ? questions.map((q) => `- ${q}`).join("\n") : ""
-        await vapi.start(interviewer, {
-          variableValues: {
-            questions: formattedQuestions,
-          },
-        })
-      }
+      // Always use the interviewer config from constants instead of workflow
+      const formattedQuestions = questions.length ? questions.map((q) => `- ${q}`).join("\n") : ""
+      await vapi.start(interviewer, {
+        variableValues: {
+          questions: formattedQuestions,
+          username: userName,
+          userid: userId,
+        },
+      })
     } catch (error) {
       console.error("Failed to start call:", error)
       const errorMessage = error instanceof Error ? error.message : "Unknown error"
-      
+
       if (errorMessage.includes("permission") || errorMessage.includes("microphone")) {
         toast.error("Microphone access denied. Please allow microphone permission and try again.")
       } else if (errorMessage.includes("device") || errorMessage.includes("audio")) {
@@ -187,7 +181,7 @@ export default function Agent({ userName, userId, interviewId, type, questions =
       } else {
         toast.error("Failed to start interview. Please check your internet connection and try again.")
       }
-      
+
       setCallStatus(CallStatus.INACTIVE)
     }
   }
@@ -306,7 +300,7 @@ export default function Agent({ userName, userId, interviewId, type, questions =
         {callStatus !== CallStatus.ACTIVE ? (
           <button
             className={cn(
-              "btn-call relative overflow-hidden", 
+              "btn-call relative overflow-hidden",
               callStatus === CallStatus.CONNECTING && "animate-pulse",
               (audioPermission === false || audioDevicesAvailable === false) && "opacity-50 cursor-not-allowed"
             )}
@@ -318,10 +312,10 @@ export default function Agent({ userName, userId, interviewId, type, questions =
             )}
             <span className="relative z-10 flex items-center gap-2">
               <Phone className="w-5 h-5" />
-              {audioPermission === null || audioDevicesAvailable === null 
-                ? "Checking Audio..." 
-                : isCallIdle 
-                  ? "Start Interview" 
+              {audioPermission === null || audioDevicesAvailable === null
+                ? "Checking Audio..."
+                : isCallIdle
+                  ? "Start Interview"
                   : "Connecting..."
               }
             </span>
