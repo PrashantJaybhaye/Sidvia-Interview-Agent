@@ -30,21 +30,24 @@ const ContactPage = async () => {
       title: 'Email Support',
       description: 'Get help via email within 24 hours',
       contact: 'support@sidvia.com',
-      action: 'Send Email'
+      action: 'Send Email',
+      href: 'mailto:support@sidvia.com'
     },
     {
       icon: <MessageSquare className="w-7 h-7" />,
       title: 'Live Chat',
       description: 'Chat with our support team in real-time',
       contact: 'Available 9 AM - 6 PM EST',
-      action: 'Start Chat'
+      action: 'Start Chat',
+      href: '#' // Placeholder for chat service
     },
     {
       icon: <Phone className="w-7 h-7" />,
       title: 'Phone Support',
       description: 'Speak directly with our team',
       contact: '+1 (555) 123-4567',
-      action: 'Call Now'
+      action: 'Call Now',
+      href: 'tel:+15551234567'
     }
   ]
 
@@ -177,10 +180,13 @@ const ContactPage = async () => {
                     {method.contact}
                   </p>
                   <Button
+                    asChild
                     variant="outline"
                     className="w-full border-border/50 hover:border-primary/80 transition-colors"
                   >
-                    {method.action}
+                    <a href={method.href}>
+                      {method.action}
+                    </a>
                   </Button>
                 </div>
               </CardContent>
