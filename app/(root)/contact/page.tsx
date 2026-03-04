@@ -39,7 +39,7 @@ const ContactPage = async () => {
       description: 'Chat with our support team in real-time',
       contact: 'Available 9 AM - 6 PM EST',
       action: 'Start Chat',
-      href: '#' // Placeholder for chat service
+      href: 'https://wa.me/918591070093'
     },
     {
       icon: <Phone className="w-7 h-7" />,
@@ -184,7 +184,7 @@ const ContactPage = async () => {
                     variant="outline"
                     className="w-full border-border/50 hover:border-primary/80 transition-colors"
                   >
-                    <a href={method.href}>
+                    <a href={method.href} target={method.href.startsWith('http') ? "_blank" : undefined} rel="noopener noreferrer">
                       {method.action}
                     </a>
                   </Button>
@@ -302,7 +302,7 @@ const ContactPage = async () => {
           </Button>
         </div>
       </section>
-      
+
       <footer className="backdrop-blur-sm py-8 px-6">
         <hr className='mb-12' />
         <div className="max-w-7xl mx-auto">

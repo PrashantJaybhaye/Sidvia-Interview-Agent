@@ -279,7 +279,90 @@ const AboutPage = async () => {
         </div>
       </section>
 
+      {/* Contact Section - Integrated into About Page as requested */}
+      <section className="space-y-12 pb-10">
+        <div className="text-center space-y-4">
+          <h2 className="text-3xl font-bold text-foreground">Get in Touch</h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            We&apos;re here to support you in every step of your career journey. Choose how you&apos;d like to reach us.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <Card className="group relative overflow-hidden border border-border/20 hover:border-primary/30 transition-all duration-300">
+            <CardContent className="p-8 space-y-6">
+              <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                <Globe className="w-8 h-8" />
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-xl font-bold">Email Support</h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  Fast and reliable help for all your inquiries via email.
+                </p>
+              </div>
+              <Button asChild variant="outline" className="w-full">
+                <a href="mailto:support@sidvia.com">Send Email</a>
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="group relative overflow-hidden border border-border/20 hover:border-primary/30 transition-all duration-300">
+            <CardContent className="p-8 space-y-6">
+              <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                <Zap className="w-8 h-8" />
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-xl font-bold">Live Chat</h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  Get instant support and answers from our live team.
+                </p>
+              </div>
+              <Button asChild variant="outline" className="w-full">
+                <a href="https://wa.me/918591070093" target="_blank" rel="noopener noreferrer">Start Chat</a>
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="group relative overflow-hidden border border-border/20 hover:border-primary/30 transition-all duration-300">
+            <CardContent className="p-8 space-y-6">
+              <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                <Users className="w-8 h-8" />
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-xl font-bold">Phone Support</h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  Talk directly with an expert to solve complex issues.
+                </p>
+              </div>
+              <Button asChild variant="outline" className="w-full">
+                <a href="tel:+15551234567">Call Now</a>
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      {/* Floating Chat Bubble for better experience */}
+      <div className="fixed bottom-8 right-8 z-[100]">
+        <a
+          href="https://wa.me/918591070093"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center w-16 h-16 bg-primary text-primary-foreground rounded-full shadow-2xl hover:scale-110 transition-transform active:scale-95 group relative"
+        >
+          <Zap className="w-8 h-8" />
+          <span className="absolute -top-2 -left-2 flex h-5 w-5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-5 w-5 bg-accent"></span>
+          </span>
+          <div className="absolute right-full mr-4 bg-background border border-border px-4 py-2 rounded-xl text-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg">
+            Chat with us! 👋
+          </div>
+        </a>
+      </div>
+
       {/* CTA Section */}
+
       <section className="bg-gradient-to-br from-primary/5 to-accent/5 rounded-3xl p-8 md:p-12 border border-border/50 my-2.5">
         <div className="text-center space-y-6">
           <h3 className="text-2xl font-bold text-foreground">Ready to Elevate Your Interview Skills?</h3>
